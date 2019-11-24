@@ -39,14 +39,24 @@ pipeline {
     }
     stage('Deploy') {
       steps {
-        echo 'Deploying...'
+        echo 'Initialising Terraform'
+        sh("terraform init -input=false \
+          -var 'access_key=${credsObj.Credentials.AccessKeyId}' \
+          -var 'secret_key=${credsObj.Credentials.SecretAccessKey}' \
+          -var 'token=${credsObj.Credentials.SessionToken}'")
+        sh("terraform apply \
+          -var 'access_key=${credsObj.Credentials.AccessKeyId}' \
+          -var 'secret_key=${credsObj.Credentials.SecretAccessKey}' \
+          -var 'token=${credsObj.Credentials.SessionToken}'")
       }
     }
   }
   post {
-    success {
+    cleanup {
       script {
-        echo 'Great Success...'
+        echo 'End of Jenkinsfile'
+        sh("rm -rf tmp")
+        cleanWs()
       }
     }
   }
