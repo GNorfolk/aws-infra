@@ -69,6 +69,7 @@ pipeline {
     cleanup {
       script {
         echo 'End of Jenkinsfile'
+        sleep 10
         bat("""rmdir "${workspace}" /S /Q""")
       }
     }
