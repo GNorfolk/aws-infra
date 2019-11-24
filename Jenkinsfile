@@ -21,8 +21,6 @@ pipeline {
               region = "eu-west-1"
               break
           }
-          echo "Testing aws shell commands..."
-          bat("aws s3 ls")
           echo "Assuming Role"
           bat("aws sts assume-role \
             --role-arn ${role} \
@@ -47,11 +45,12 @@ pipeline {
     }
     stage('Deploy') {
       steps {
-        echo 'Initialising Terraform'
+        echo "Initialising Terraform"
         shell("terraform init -input=false \
           -var 'access_key=${credsObj.Credentials.AccessKeyId}' \
           -var 'secret_key=${credsObj.Credentials.SecretAccessKey}' \
           -var 'token=${credsObj.Credentials.SessionToken}'")
+          echo "Deploying Terraform"
         shell("terraform apply -auto-approve -no-color \
           -var 'access_key=${credsObj.Credentials.AccessKeyId}' \
           -var 'secret_key=${credsObj.Credentials.SecretAccessKey}' \
