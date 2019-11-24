@@ -69,7 +69,7 @@ pipeline {
     cleanup {
       script {
         echo 'End of Jenkinsfile'
-        bat("rmdir ${workspace}\\tmp /S /Q")
+        bat("rmdir '${workspace}\\tmp' /S /Q")
         cleanWs()
       }
     }
