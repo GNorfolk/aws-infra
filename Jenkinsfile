@@ -17,7 +17,7 @@ pipeline {
       steps {
         script {
           echo "Prerequisite Setup"
-          bat "mkdir -p tmp"
+          bat "mkdir tmp"
           echo "Declaring Variables"
           switch (environment) {
             case 'Infra':
@@ -52,7 +52,7 @@ pipeline {
       steps {
         dir("${workspace}/terraform/deploys/${environment}") {
           echo "Initialising Terraform"
-          quietbat("terraform init -input=false \
+          quietbat("terraform init -input=false -no-color \
             -var 'access_key=${credsObj.Credentials.AccessKeyId}' \
             -var 'secret_key=${credsObj.Credentials.SecretAccessKey}' \
             -var 'token=${credsObj.Credentials.SessionToken}'")
