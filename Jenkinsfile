@@ -1,6 +1,6 @@
 def shell(cmd) {
   sh(
-    script: '#!/bin/sh +x \n' + cmd
+    script: '#!/bin/sh \r\n' + cmd
   )
 }
 pipeline {
