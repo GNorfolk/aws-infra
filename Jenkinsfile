@@ -50,7 +50,7 @@ pipeline {
     }
     stage('Deploy') {
       steps {
-        dir("${workspace}/terraform/deploys/${environment}") {
+        dir("${workspace}\\terraform\\deploys\\${environment}") {
           echo "Initialising Terraform"
           quietbat("terraform init -input=false -no-color \
             -var 'access_key=${credsObj.Credentials.AccessKeyId}' \
