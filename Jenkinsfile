@@ -1,7 +1,7 @@
 pipeline {
   agent any
   parameters {
-    choice(name: 'environment', choices: ['Infra'])
+    choice(name: 'environment', choices: ['Infra', 'Other'], description: "This is the environment to deploy to.")
   }
   stages {
     stage('Setup') {
