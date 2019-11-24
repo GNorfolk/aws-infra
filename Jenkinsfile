@@ -1,3 +1,8 @@
+def shell(cmd) {
+  sh(
+    script: '#!/bin/sh +x \n' + cmd
+  )
+}
 pipeline {
   agent any
   parameters {
@@ -8,7 +13,7 @@ pipeline {
       steps {
         script {
           echo "Prerequisite Setup"
-          sh "mkdir -p tmp"
+          shell "mkdir -p tmp"
           echo "Declaring Variables"
           switch (environment) {
             case 'Infra':
@@ -18,7 +23,7 @@ pipeline {
               break
           }
           echo "Assuming Role"
-          sh("aws sts assume-role \
+          shell("aws sts assume-role \
             --role-arn ${role} \
             --role-session-name ${session} \
             --region ${region} \
@@ -42,11 +47,11 @@ pipeline {
     stage('Deploy') {
       steps {
         echo 'Initialising Terraform'
-        sh("terraform init -input=false \
+        shell("terraform init -input=false \
           -var 'access_key=${credsObj.Credentials.AccessKeyId}' \
           -var 'secret_key=${credsObj.Credentials.SecretAccessKey}' \
           -var 'token=${credsObj.Credentials.SessionToken}'")
-        sh("terraform apply -auto-approve -no-color \
+        shell("terraform apply -auto-approve -no-color \
           -var 'access_key=${credsObj.Credentials.AccessKeyId}' \
           -var 'secret_key=${credsObj.Credentials.SecretAccessKey}' \
           -var 'token=${credsObj.Credentials.SessionToken}'")
@@ -57,7 +62,7 @@ pipeline {
     cleanup {
       script {
         echo 'End of Jenkinsfile'
-        sh("rm -rf tmp")
+        shell("rm -rf tmp")
         cleanWs()
       }
     }
