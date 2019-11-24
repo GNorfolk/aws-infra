@@ -26,7 +26,7 @@ pipeline {
               break
           }
           echo "Testing aws shell commands..."
-          bat("aws s3 ls --profile default")
+          bat("aws s3 ls")
           echo "Assuming Role"
           bat("aws sts assume-role \
             --role-arn ${role} \
