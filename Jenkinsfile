@@ -1,7 +1,7 @@
 import groovy.json.JsonSlurperClassic
 def quietbat(cmd) {
   sh(
-    script: 'echo off \r\n' + cmd
+    script: "@echo off \r\n" + cmd
   )
 }
 pipeline {
