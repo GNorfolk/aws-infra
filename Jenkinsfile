@@ -9,7 +9,7 @@ pipeline {
         echo "Prerequisite Setup"
         sh "mkdir -p tmp"
         echo "Declaring Variables"
-        switch(environment) {
+        switch (environment) {
           case 'Infra':
             role = "arn:aws:iam::103348857345:role/Admin"
             session = "NorfolkGaming-${environment}-Deployment"
