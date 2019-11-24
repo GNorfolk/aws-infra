@@ -9,7 +9,7 @@ pipeline {
     choice(name: 'environment', choices: ['Infra', 'Other'], description: "This is the environment to deploy to.")
   }
   environment {
-    PATH = "C:\\Users\\TheNorfolk\\AppData\\Roaming\\npm;C:\\Users\\TheNorfolk\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\TheNorfolk\\AppData\\Local\\atom\\bin;C:\\Users\\TheNorfolk\\terraform_0.12.16_windows_amd64"
+    Path = "C:\\Users\\TheNorfolk\\AppData\\Roaming\\npm;C:\\Users\\TheNorfolk\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\TheNorfolk\\AppData\\Local\\atom\\bin;C:\\Users\\TheNorfolk\\terraform_0.12.16_windows_amd64"
   }
   stages {
     stage('Setup') {
