@@ -1,8 +1,4 @@
-// def shell(cmd) {
-//   sh(
-//     script: '#!/bin/sh \r\n' + cmd
-//   )
-// }
+import groovy.json.JsonSlurperClassic
 pipeline {
   agent any
   parameters {
