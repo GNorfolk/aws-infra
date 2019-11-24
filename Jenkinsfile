@@ -13,7 +13,7 @@ pipeline {
       steps {
         script {
           echo "Prerequisite Setup"
-          shell "mkdir -p tmp"
+          bat "mkdir -p tmp"
           echo "Declaring Variables"
           switch (environment) {
             case 'Infra':
@@ -23,9 +23,9 @@ pipeline {
               break
           }
           echo "Testing aws shell commands..."
-          shell("aws s3 ls")
+          bat("aws s3 ls")
           echo "Assuming Role"
-          shell("aws sts assume-role \
+          bat("aws sts assume-role \
             --role-arn ${role} \
             --role-session-name ${session} \
             --region ${region} \
