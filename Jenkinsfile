@@ -1,8 +1,8 @@
-def shell(cmd) {
-  sh(
-    script: '#!/bin/sh \r\n' + cmd
-  )
-}
+// def shell(cmd) {
+//   sh(
+//     script: '#!/bin/sh \r\n' + cmd
+//   )
+// }
 pipeline {
   agent any
   parameters {
