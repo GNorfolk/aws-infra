@@ -2,21 +2,21 @@ resource "aws_vpc" "main" {
   cidr_block = "10.0.0.0/16"
 }
 
-resource "aws_subnet" "public_aza" {
+resource "aws_subnet" "elb_aza" {
   vpc_id = aws_vpc.main.id
   cidr_block = cidrsubnet("10.0.0.0/16", 4, 0)
   map_public_ip_on_launch = true
   availability_zone = "eu-west-1a"
 }
 
-resource "aws_subnet" "public_azb" {
+resource "aws_subnet" "elb_azb" {
   vpc_id = aws_vpc.main.id
   cidr_block = cidrsubnet("10.0.0.0/16", 4, 1)
   map_public_ip_on_launch = true
   availability_zone = "eu-west-1b"
 }
 
-resource "aws_subnet" "public_azc" {
+resource "aws_subnet" "elb_azc" {
   vpc_id = aws_vpc.main.id
   cidr_block = cidrsubnet("10.0.0.0/16", 4, 2)
   map_public_ip_on_launch = true
@@ -63,4 +63,8 @@ resource "aws_subnet" "db_azc" {
   cidr_block = cidrsubnet("10.0.0.0/16", 4, 8)
   map_public_ip_on_launch = false
   availability_zone = "eu-west-1c"
+}
+
+resource "aws_internet_gateway" "main" {
+  vpc_id = "${aws_vpc.main.id}"
 }
