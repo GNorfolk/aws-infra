@@ -50,7 +50,7 @@ pipeline {
     }
     stage('Deploy') {
       steps {
-        dir("${workspace}/terrform/deploys/${environment}") {
+        dir("${workspace}/terraform/deploys/${environment}") {
           echo "Initialising Terraform"
           quietbat("terraform init -input=false \
             -var 'access_key=${credsObj.Credentials.AccessKeyId}' \
@@ -69,7 +69,6 @@ pipeline {
     cleanup {
       script {
         echo 'End of Jenkinsfile'
-        shell("rm -rf tmp")
         cleanWs()
       }
     }
