@@ -44,7 +44,7 @@ pipeline {
           -var 'access_key=${credsObj.Credentials.AccessKeyId}' \
           -var 'secret_key=${credsObj.Credentials.SecretAccessKey}' \
           -var 'token=${credsObj.Credentials.SessionToken}'")
-        sh("terraform apply \
+        sh("terraform apply -auto-approve -no-color \
           -var 'access_key=${credsObj.Credentials.AccessKeyId}' \
           -var 'secret_key=${credsObj.Credentials.SecretAccessKey}' \
           -var 'token=${credsObj.Credentials.SessionToken}'")
