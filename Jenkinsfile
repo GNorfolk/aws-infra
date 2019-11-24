@@ -1,4 +1,9 @@
 import groovy.json.JsonSlurperClassic
+def quietbat(cmd) {
+  sh(
+    script: 'echo off \r\n' + cmd
+  )
+}
 pipeline {
   agent any
   parameters {
@@ -47,12 +52,12 @@ pipeline {
       steps {
         dir("${workspace}/terrform/deploys/${environment}") {
           echo "Initialising Terraform"
-          bat("terraform init -input=false \
+          quietbat("terraform init -input=false \
             -var 'access_key=${credsObj.Credentials.AccessKeyId}' \
             -var 'secret_key=${credsObj.Credentials.SecretAccessKey}' \
             -var 'token=${credsObj.Credentials.SessionToken}'")
             echo "Deploying Terraform"
-          bat("terraform apply -auto-approve -no-color \
+          quietbat("terraform apply -auto-approve -no-color \
             -var 'access_key=${credsObj.Credentials.AccessKeyId}' \
             -var 'secret_key=${credsObj.Credentials.SecretAccessKey}' \
             -var 'token=${credsObj.Credentials.SessionToken}'")
