@@ -15,6 +15,7 @@ pipeline {
             session = "NorfolkGaming-${environment}-Deployment"
             region = "eu-west-1"
             break
+        }
         echo "Assuming Role"
         sh("aws sts assume-role \
           --role-arn ${role} \
@@ -24,7 +25,6 @@ pipeline {
         echo "Preparing Credentials"
         credsJson = readFile("${WORKSPACE}/tmp/assume-role-output.json")
         credsObj = new groovy.json.JsonSlurperClassic().parseText(credsJson)
-        }
       }
     }
     stage('Build') {
