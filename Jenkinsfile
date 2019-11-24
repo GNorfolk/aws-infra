@@ -22,6 +22,8 @@ pipeline {
               region = "eu-west-1"
               break
           }
+          echo "Testing aws shell commands..."
+          shell("aws s3 ls")
           echo "Assuming Role"
           shell("aws sts assume-role \
             --role-arn ${role} \
