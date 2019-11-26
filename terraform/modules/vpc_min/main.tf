@@ -1,5 +1,8 @@
 resource "aws_vpc" "main" {
   cidr_block = var.cidr
+  tags = {
+    Name = "main"
+  }
 }
 
 resource "aws_subnet" "elb_az_a" {
