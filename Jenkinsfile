@@ -2,7 +2,7 @@ import groovy.json.JsonSlurperClassic
 pipeline {
   agent any
   parameters {
-    choice(name: 'environment', choices: ['Infra', 'Other'], description: "This is the environment to deploy to.")
+    choice(name: 'environment', choices: ['Flexible', 'Fixed'], description: "This is the environment to deploy to.")
   }
   environment {
     Path = "C:\\Program Files\\Python38\\Scripts\\;C:\\Program Files\\Python38\\;D:\\Program Files\\Java\\bin;C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\javapath;C:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common;C:\\Program Files (x86)\\AMD APP\\bin\\x86_64;C:\\Program Files (x86)\\AMD APP\\bin\\x86;C:\\Windows\\system32;C:\\Windows;C:\\Windows\\System32\\Wbem;C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\;C:\\Program Files (x86)\\ATI Technologies\\ATI.ACE\\Core-Static;D:\\Program Files\\Git\\cmd;D:\\Program Files\\Git\\mingw64\\bin;D:\\Program Files\\Git\\usr\\bin;D:\\Program Files\\nodejs\\;C:\\Users\\TheNorfolk\\AppData\\Roaming\\npm;C:\\Users\\TheNorfolk\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\TheNorfolk\\AppData\\Local\\atom\\bin;C:\\Users\\TheNorfolk\\terraform_0.12.16_windows_amd64"
@@ -15,7 +15,12 @@ pipeline {
           bat "mkdir tmp"
           echo "Declaring Variables"
           switch (environment) {
-            case 'Infra':
+            case 'Flexible':
+              role = "arn:aws:iam::103348857345:role/Admin"
+              session = "NorfolkGaming-${environment}-Deployment"
+              region = "eu-west-1"
+              break
+            case 'Fixed':
               role = "arn:aws:iam::103348857345:role/Admin"
               session = "NorfolkGaming-${environment}-Deployment"
               region = "eu-west-1"
