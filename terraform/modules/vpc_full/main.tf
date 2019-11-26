@@ -7,6 +7,9 @@ resource "aws_subnet" "elb_az_a" {
   cidr_block = cidrsubnet(var.cidr, 4, 0)
   map_public_ip_on_launch = true
   availability_zone = "eu-west-1a"
+  tags = {
+    Name = "elb_az_a"
+  }
 }
 
 resource "aws_subnet" "elb_az_b" {
@@ -14,6 +17,9 @@ resource "aws_subnet" "elb_az_b" {
   cidr_block = cidrsubnet(var.cidr, 4, 1)
   map_public_ip_on_launch = true
   availability_zone = "eu-west-1b"
+  tags = {
+    Name = "elb_az_b"
+  }
 }
 
 resource "aws_subnet" "elb_az_c" {
@@ -21,6 +27,9 @@ resource "aws_subnet" "elb_az_c" {
   cidr_block = cidrsubnet(var.cidr, 4, 2)
   map_public_ip_on_launch = true
   availability_zone = "eu-west-1c"
+  tags = {
+    Name = "elb_az_c"
+  }
 }
 
 resource "aws_subnet" "app_az_a" {
@@ -28,6 +37,9 @@ resource "aws_subnet" "app_az_a" {
   cidr_block = cidrsubnet(var.cidr, 4, 3)
   map_public_ip_on_launch = false
   availability_zone = "eu-west-1a"
+  tags = {
+    Name = "app_az_a"
+  }
 }
 
 resource "aws_subnet" "app_az_b" {
@@ -35,6 +47,9 @@ resource "aws_subnet" "app_az_b" {
   cidr_block = cidrsubnet(var.cidr, 4, 4)
   map_public_ip_on_launch = false
   availability_zone = "eu-west-1b"
+  tags = {
+    Name = "app_az_b"
+  }
 }
 
 resource "aws_subnet" "app_az_c" {
@@ -42,6 +57,9 @@ resource "aws_subnet" "app_az_c" {
   cidr_block = cidrsubnet(var.cidr, 4, 5)
   map_public_ip_on_launch = false
   availability_zone = "eu-west-1c"
+  tags = {
+    Name = "app_az_c"
+  }
 }
 
 resource "aws_subnet" "db_az_a" {
@@ -49,6 +67,9 @@ resource "aws_subnet" "db_az_a" {
   cidr_block = cidrsubnet(var.cidr, 4, 6)
   map_public_ip_on_launch = false
   availability_zone = "eu-west-1a"
+  tags = {
+    Name = "db_az_a"
+  }
 }
 
 resource "aws_subnet" "db_az_b" {
@@ -56,6 +77,9 @@ resource "aws_subnet" "db_az_b" {
   cidr_block = cidrsubnet(var.cidr, 4, 7)
   map_public_ip_on_launch = false
   availability_zone = "eu-west-1b"
+  tags = {
+    Name = "db_az_b"
+  }
 }
 
 resource "aws_subnet" "db_az_c" {
@@ -63,6 +87,9 @@ resource "aws_subnet" "db_az_c" {
   cidr_block = cidrsubnet(var.cidr, 4, 8)
   map_public_ip_on_launch = false
   availability_zone = "eu-west-1c"
+  tags = {
+    Name = "db_az_c"
+  }
 }
 
 resource "aws_eip" "nat_az_a" {
