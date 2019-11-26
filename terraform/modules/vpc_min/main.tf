@@ -10,6 +10,9 @@ resource "aws_subnet" "elb_az_a" {
   cidr_block = cidrsubnet(var.cidr, 4, 0)
   map_public_ip_on_launch = true
   availability_zone = "eu-west-1a"
+  tags = {
+    Name = "elb_az_a"
+  }
 }
 
 resource "aws_subnet" "app_az_a" {
@@ -17,6 +20,9 @@ resource "aws_subnet" "app_az_a" {
   cidr_block = cidrsubnet(var.cidr, 4, 3)
   map_public_ip_on_launch = false
   availability_zone = "eu-west-1a"
+  tags = {
+    Name = "app_az_a"
+  }
 }
 
 resource "aws_subnet" "db_az_a" {
@@ -24,6 +30,9 @@ resource "aws_subnet" "db_az_a" {
   cidr_block = cidrsubnet(var.cidr, 4, 6)
   map_public_ip_on_launch = false
   availability_zone = "eu-west-1a"
+  tags = {
+    Name = "db_az_a"
+  }
 }
 
 resource "aws_eip" "nat_az_a" {
