@@ -1,10 +1,10 @@
 resource "aws_route53_zone" "norfolkgaming" {
-  name = "norfolkgaming.com."
+  name = "norfolkgaming.com"
 }
 
 resource "aws_route53_record" "ns" {
   zone_id = aws_route53_zone.norfolkgaming.zone_id
-  name    = "norfolkgaming.com."
+  name    = "norfolkgaming.com"
   type    = "NS"
   ttl     = "172800"
   allow_overwrite = true
@@ -18,7 +18,7 @@ resource "aws_route53_record" "ns" {
 
 resource "aws_route53_record" "soa" {
   zone_id = aws_route53_zone.norfolkgaming.zone_id
-  name    = "norfolkgaming.com."
+  name    = "norfolkgaming.com"
   type    = "SOA"
   ttl     = "900"
   allow_overwrite = true
