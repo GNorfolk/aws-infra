@@ -47,7 +47,7 @@ pipeline {
             -var secret_key=${credsObj.Credentials.SecretAccessKey} \
             -var token=${credsObj.Credentials.SessionToken}")
             echo "Deploying Terraform"
-          bat("terraform apply -auto-approve -no-color \
+          bat("terraform plan -no-color \
             -var access_key=${credsObj.Credentials.AccessKeyId} \
             -var secret_key=${credsObj.Credentials.SecretAccessKey} \
             -var token=${credsObj.Credentials.SessionToken}")
