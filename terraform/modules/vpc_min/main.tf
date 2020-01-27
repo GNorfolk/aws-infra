@@ -17,7 +17,7 @@ resource "aws_subnet" "elb_az_a" {
 
 resource "aws_subnet" "app_az_a" {
   vpc_id = aws_vpc.main.id
-  cidr_block = cidrsubnet(var.cidr, 4, 3)
+  cidr_block = cidrsubnet(var.cidr, 4, 1)
   map_public_ip_on_launch = false
   availability_zone = "eu-west-1a"
   tags = {
@@ -27,7 +27,7 @@ resource "aws_subnet" "app_az_a" {
 
 resource "aws_subnet" "db_az_a" {
   vpc_id = aws_vpc.main.id
-  cidr_block = cidrsubnet(var.cidr, 4, 6)
+  cidr_block = cidrsubnet(var.cidr, 4, 2)
   map_public_ip_on_launch = false
   availability_zone = "eu-west-1a"
   tags = {
