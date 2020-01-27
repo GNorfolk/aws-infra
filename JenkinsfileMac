@@ -4,6 +4,9 @@ pipeline {
   parameters {
     choice(name: 'environment', choices: ['Flexible', 'Fixed'], description: "This is the environment to deploy to.")
   }
+  environment {
+    PATH = "/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin:/opt/aws/bin"
+  }
   stages {
     stage('Setup') {
       steps {
