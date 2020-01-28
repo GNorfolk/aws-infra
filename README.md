@@ -17,6 +17,8 @@
 ### Windows
 - Install AWS CLI:
 - Source: https://docs.aws.amazon.com/cli/latest/userguide/install-windows.html
+- Run `aws configure` and add AccessID and SecretKey from User creation
+- Download terraform v0.12 and added to PATH env
 - Download Python 64-bit installer and setup custom install to add Python3 to path and install pip3
 - type `python --version` and `pip3 --version` to test install (may require cmd restart)
 - type `pip3 install awscli` and then test install using `aws --version` or `aws s3 ls`
@@ -49,11 +51,15 @@
 - Set Pipeline to pull from your repo via https
 - Add new credentials using Jenkins Username and Password setup in Jenkins setup
 - Kick off pipeline with basic template to test.
+- Goto Jenkins user in IAM
+- Goto Security Credentials tag and create new access key and copy values
+- Goto Manage Jenkins - Configure System
+- Put a tick in the "Environment variables" checkbox
+- Input AWS_ACCESS_KEY_ID with value from Jenkins user
+- Input AWS_SECRET_ACCESS_KEY with value from Jenkins user
 
 ### AWS setup
 - Add roles and stuff to authenticate with AWS.
-- Created new user called "Admin"
-- Ran `aws configure` and added AccessID and SecretKey from User creation
-- Downloaded terraform v0.12 and added to PATH env
+- Create new user called "Admin" to assume
 - Create bucket called norfolkgaming-tfstate
-- Create IAM role for infra deployment
+- Create IAM role for infra deployment ???
