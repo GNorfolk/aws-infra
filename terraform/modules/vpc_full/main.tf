@@ -1,6 +1,20 @@
 resource "aws_vpc" "main" {
   cidr_block = var.cidr
 }
+# resource "aws_subnet" "uhh" {
+#   for_each = {
+#     elb_az_a = true
+#     app_az_a = false
+#     db_az_a = false
+#   }
+#   vpc_id = aws_vpc.main.id
+#   cidr_block = cidrsubnet(var.cidr, 4, each.index)
+#   map_public_ip_on_launch = each.value
+#   availability_zone = "eu-west-1a"
+#   tags = {
+#     Name = each.key
+#   }
+# }
 
 resource "aws_subnet" "elb_az_a" {
   vpc_id = aws_vpc.main.id
