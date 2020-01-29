@@ -1,18 +1,14 @@
 resource "aws_vpc" "main" {
   cidr_block = var.cidr
 }
-resource "aws_subnet" "public" {
-  for_each = {
-    eu-west-1a = 0
-    eu-west-1b = 1
-    eu-west-1c = 2
-  }
+resource "aws_subnet" "elb" {
+  for_each = {a = 0, b = 1, c = 2}
   vpc_id = aws_vpc.main.id
   cidr_block = cidrsubnet(var.cidr, 4, each.value)
   map_public_ip_on_launch = true
-  availability_zone = each.key
+  availability_zone = join("", ["eu-west-1", each.key])
   tags = {
-    Name = join(" ", ["public", each.value])
+    Name = join("", ["elb_az_", each.key])
   }
 }
 
