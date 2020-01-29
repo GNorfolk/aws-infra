@@ -12,7 +12,7 @@ resource "aws_subnet" "uhh" {
     db_az_a = false
   }
   vpc_id = aws_vpc.main.id
-  cidr_block = cidrsubnet(var.cidr, 4, count)
+  cidr_block = cidrsubnet(var.cidr, 4, count.index)
   map_public_ip_on_launch = each.value
   availability_zone = "eu-west-1a"
   tags = {
