@@ -35,6 +35,11 @@ resource "aws_subnet" "db" {
   }
 }
 
+resource "aws_eip" "nat" {
+ count = 3
+  vpc = true
+}
+
 # resource "aws_eip" "nat_az_a" {
 #   vpc = true
 # }
