@@ -40,37 +40,16 @@ resource "aws_eip" "nat" {
   vpc = true
 }
 
-# resource "aws_eip" "nat_az_a" {
-#   vpc = true
-# }
-#
-# resource "aws_eip" "nat_az_b" {
-#   vpc = true
-# }
-#
-# resource "aws_eip" "nat_az_c" {
-#   vpc = true
-# }
-#
-# resource "aws_internet_gateway" "main" {
-#   vpc_id = aws_vpc.main.id
-# }
-#
-# resource "aws_nat_gateway" "az_a" {
-#   allocation_id = aws_eip.nat_az_a.id
-#   subnet_id = aws_subnet.elb_az_a.id
-# }
-#
-# resource "aws_nat_gateway" "az_b" {
-#   allocation_id = aws_eip.nat_az_b.id
-#   subnet_id = aws_subnet.elb_az_b.id
-# }
-#
-# resource "aws_nat_gateway" "az_c" {
-#   allocation_id = aws_eip.nat_az_c.id
-#   subnet_id = aws_subnet.elb_az_c.id
-# }
-#
+resource "aws_internet_gateway" "main" {
+  vpc_id = aws_vpc.main.id
+}
+
+resource "aws_nat_gateway" "nat" {
+  for_each = {a = 0, b = 1, c = 2}
+  allocation_id = aws_eip.nat[each.value].id
+  subnet_id = aws_subnet.elb[each.key].id
+}
+
 # resource "aws_route_table" "elb" {
 #   vpc_id = aws_vpc.main.id
 #   route {
