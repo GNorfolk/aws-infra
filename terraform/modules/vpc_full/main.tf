@@ -14,9 +14,9 @@ resource "aws_subnet" "elb" {
 }
 
 resource "aws_subnet" "app" {
-  for_each = {a = 3, b = 4, c = 5}
+  for_each = {a = 0, b = 1, c = 2}
   vpc_id = aws_vpc.main.id
-  cidr_block = cidrsubnet(var.cidr, 4, each.value)
+  cidr_block = cidrsubnet(var.cidr, 4, each.value + 3)
   map_public_ip_on_launch = false
   availability_zone = join("", ["eu-west-1", each.key])
   tags = {
@@ -25,9 +25,9 @@ resource "aws_subnet" "app" {
 }
 
 resource "aws_subnet" "db" {
-  for_each = {a = 6, b = 7, c = 8}
+  for_each = {a = 0, b = 1, c = 2}
   vpc_id = aws_vpc.main.id
-  cidr_block = cidrsubnet(var.cidr, 4, each.value)
+  cidr_block = cidrsubnet(var.cidr, 4, each.value + 6)
   map_public_ip_on_launch = false
   availability_zone = join("", ["eu-west-1", each.key])
   tags = {
