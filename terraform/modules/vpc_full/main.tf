@@ -1,6 +1,7 @@
 resource "aws_vpc" "main" {
   cidr_block = var.cidr
 }
+
 resource "aws_subnet" "elb" {
   for_each = {a = 0, b = 1, c = 2}
   vpc_id = aws_vpc.main.id
@@ -12,96 +13,28 @@ resource "aws_subnet" "elb" {
   }
 }
 
-# resource "aws_subnet" "elb_az_a" {
-#   vpc_id = aws_vpc.main.id
-#   cidr_block = cidrsubnet(var.cidr, 4, 0)
-#   map_public_ip_on_launch = true
-#   availability_zone = "eu-west-1a"
-#   tags = {
-#     Name = "elb_az_a"
-#   }
-# }
-#
-# resource "aws_subnet" "elb_az_b" {
-#   vpc_id = aws_vpc.main.id
-#   cidr_block = cidrsubnet(var.cidr, 4, 1)
-#   map_public_ip_on_launch = true
-#   availability_zone = "eu-west-1b"
-#   tags = {
-#     Name = "elb_az_b"
-#   }
-# }
-#
-# resource "aws_subnet" "elb_az_c" {
-#   vpc_id = aws_vpc.main.id
-#   cidr_block = cidrsubnet(var.cidr, 4, 2)
-#   map_public_ip_on_launch = true
-#   availability_zone = "eu-west-1c"
-#   tags = {
-#     Name = "elb_az_c"
-#   }
-# }
-#
-# resource "aws_subnet" "app_az_a" {
-#   vpc_id = aws_vpc.main.id
-#   cidr_block = cidrsubnet(var.cidr, 4, 3)
-#   map_public_ip_on_launch = false
-#   availability_zone = "eu-west-1a"
-#   tags = {
-#     Name = "app_az_a"
-#   }
-# }
-#
-# resource "aws_subnet" "app_az_b" {
-#   vpc_id = aws_vpc.main.id
-#   cidr_block = cidrsubnet(var.cidr, 4, 4)
-#   map_public_ip_on_launch = false
-#   availability_zone = "eu-west-1b"
-#   tags = {
-#     Name = "app_az_b"
-#   }
-# }
-#
-# resource "aws_subnet" "app_az_c" {
-#   vpc_id = aws_vpc.main.id
-#   cidr_block = cidrsubnet(var.cidr, 4, 5)
-#   map_public_ip_on_launch = false
-#   availability_zone = "eu-west-1c"
-#   tags = {
-#     Name = "app_az_c"
-#   }
-# }
-#
-# resource "aws_subnet" "db_az_a" {
-#   vpc_id = aws_vpc.main.id
-#   cidr_block = cidrsubnet(var.cidr, 4, 6)
-#   map_public_ip_on_launch = false
-#   availability_zone = "eu-west-1a"
-#   tags = {
-#     Name = "db_az_a"
-#   }
-# }
-#
-# resource "aws_subnet" "db_az_b" {
-#   vpc_id = aws_vpc.main.id
-#   cidr_block = cidrsubnet(var.cidr, 4, 7)
-#   map_public_ip_on_launch = false
-#   availability_zone = "eu-west-1b"
-#   tags = {
-#     Name = "db_az_b"
-#   }
-# }
-#
-# resource "aws_subnet" "db_az_c" {
-#   vpc_id = aws_vpc.main.id
-#   cidr_block = cidrsubnet(var.cidr, 4, 8)
-#   map_public_ip_on_launch = false
-#   availability_zone = "eu-west-1c"
-#   tags = {
-#     Name = "db_az_c"
-#   }
-# }
-#
+resource "aws_subnet" "app" {
+  for_each = {a = 3, b = 4, c = 5}
+  vpc_id = aws_vpc.main.id
+  cidr_block = cidrsubnet(var.cidr, 4, each.value)
+  map_public_ip_on_launch = false
+  availability_zone = join("", ["eu-west-1", each.key])
+  tags = {
+    Name = join("", ["alb_az_", each.key])
+  }
+}
+
+resource "aws_subnet" "db" {
+  for_each = {a = 6, b = 7, c = 8}
+  vpc_id = aws_vpc.main.id
+  cidr_block = cidrsubnet(var.cidr, 4, each.value)
+  map_public_ip_on_launch = false
+  availability_zone = join("", ["eu-west-1", each.key])
+  tags = {
+    Name = join("", ["db_az_", each.key])
+  }
+}
+
 # resource "aws_eip" "nat_az_a" {
 #   vpc = true
 # }
