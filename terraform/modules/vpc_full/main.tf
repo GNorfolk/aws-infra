@@ -36,7 +36,7 @@ resource "aws_subnet" "db" {
 }
 
 resource "aws_eip" "nat" {
- count = 3
+  count = 3
   vpc = true
 }
 
