@@ -3,7 +3,7 @@ resource "aws_vpc" "main" {
 }
 
 resource "aws_subnet" "elb" {
-  for_each = {a = 0, b = 1, c = 2}
+  for_each = var.mapping
   vpc_id = aws_vpc.main.id
   cidr_block = cidrsubnet(var.cidr, 4, each.value)
   map_public_ip_on_launch = true
@@ -14,7 +14,7 @@ resource "aws_subnet" "elb" {
 }
 
 resource "aws_subnet" "app" {
-  for_each = {a = 0, b = 1, c = 2}
+  for_each = var.mapping
   vpc_id = aws_vpc.main.id
   cidr_block = cidrsubnet(var.cidr, 4, each.value + 3)
   map_public_ip_on_launch = false
@@ -25,7 +25,7 @@ resource "aws_subnet" "app" {
 }
 
 resource "aws_subnet" "db" {
-  for_each = {a = 0, b = 1, c = 2}
+  for_each = var.mapping
   vpc_id = aws_vpc.main.id
   cidr_block = cidrsubnet(var.cidr, 4, each.value + 6)
   map_public_ip_on_launch = false
@@ -36,7 +36,7 @@ resource "aws_subnet" "db" {
 }
 
 resource "aws_eip" "nat" {
-  count = 3
+  for_each = var.mapping
   vpc = true
 }
 
@@ -45,8 +45,8 @@ resource "aws_internet_gateway" "main" {
 }
 
 resource "aws_nat_gateway" "nat" {
-  for_each = {a = 0, b = 1, c = 2}
-  allocation_id = aws_eip.nat[each.value].id
+  for_each = var.mapping
+  allocation_id = aws_eip.nat[each.key].id
   subnet_id = aws_subnet.elb[each.key].id
 }
 
@@ -59,13 +59,13 @@ resource "aws_route_table" "elb" {
 }
 
 resource "aws_route_table_association" "elb" {
-  for_each = {a = 0, b = 1, c = 2}
+  for_each = var.mapping
   subnet_id      = aws_subnet.elb[each.key].id
   route_table_id = aws_route_table.elb.id
 }
 
 resource "aws_route_table" "app" {
-  for_each = {a = 0, b = 1, c = 2}
+  for_each = var.mapping
   vpc_id = aws_vpc.main.id
   route {
     cidr_block = "0.0.0.0/0"
@@ -74,7 +74,7 @@ resource "aws_route_table" "app" {
 }
 
 resource "aws_route_table_association" "app" {
-  for_each = {a = 0, b = 1, c = 2}
+  for_each = var.mapping
   subnet_id      = aws_subnet.app[each.key].id
   route_table_id = aws_route_table.app[each.key].id
 }
@@ -84,7 +84,7 @@ resource "aws_route_table" "db" {
 }
 
 resource "aws_route_table_association" "db" {
-  for_each = {a = 0, b = 1, c = 2}
+  for_each = var.mapping
   subnet_id      = aws_subnet.db[each.key].id
   route_table_id = aws_route_table.db.id
 }
