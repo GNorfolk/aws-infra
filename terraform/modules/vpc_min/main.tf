@@ -6,7 +6,6 @@ resource "aws_vpc" "main" {
 }
 
 resource "aws_subnet" "uhh" {
-  count = 3
   for_each = {
     elb_az_a = true
     app_az_a = false
