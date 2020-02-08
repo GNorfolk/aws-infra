@@ -23,7 +23,7 @@ resource "aws_subnet" "app" {
   map_public_ip_on_launch = false
   availability_zone = join("", ["eu-west-1", each.key])
   tags = {
-    Name = join("", ["alb_az_", each.key])
+    Name = join("", ["app_az_", each.key])
   }
 }
 
