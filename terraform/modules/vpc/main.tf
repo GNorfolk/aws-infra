@@ -39,7 +39,6 @@ resource "aws_subnet" "db" {
 }
 
 resource "aws_eip" "nat" {
-  for_each = var.mapping
   vpc = true
 }
 
@@ -48,9 +47,8 @@ resource "aws_internet_gateway" "main" {
 }
 
 resource "aws_nat_gateway" "nat" {
-  for_each = var.mapping
-  allocation_id = aws_eip.nat[each.key].id
-  subnet_id = aws_subnet.elb[each.key].id
+  allocation_id = aws_eip.nat.id
+  subnet_id = aws_subnet.elb["a"].id
 }
 
 resource "aws_route_table" "elb" {
@@ -72,7 +70,7 @@ resource "aws_route_table" "app" {
   vpc_id = aws_vpc.main.id
   route {
     cidr_block = "0.0.0.0/0"
-    gateway_id = aws_nat_gateway.nat[each.key].id
+    gateway_id = aws_nat_gateway.nat.id
   }
 }
 
