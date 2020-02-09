@@ -1,0 +1,66 @@
+import groovy.json.JsonSlurperClassic
+pipeline {
+  agent any
+  parameters {
+    choice(name: 'environment', choices: ['Flexible', 'Fixed'], description: "This is the environment to deploy to.")
+  }
+  environment {
+    PATH = "/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin:/opt/aws/bin"
+  }
+  stages {
+    stage('Setup') {
+      steps {
+        script {
+          echo "Prerequisite Setup"
+          sh "mkdir tmp"
+          echo "Declaring Variables"
+          switch (environment) {
+            case 'Flexible':
+              role = "arn:aws:iam::103348857345:role/Admin"
+              session = "NorfolkGaming-${environment}-Deployment"
+              region = "eu-west-1"
+              break
+            case 'Fixed':
+              role = "arn:aws:iam::103348857345:role/Admin"
+              session = "NorfolkGaming-${environment}-Deployment"
+              region = "eu-west-1"
+              break
+          }
+          echo "Assuming Role"
+          sh("aws sts assume-role \
+            --role-arn ${role} \
+            --role-session-name ${session} \
+            --region ${region} \
+            > tmp/assume-role-output.json")
+          echo "Preparing Credentials"
+          credsJson = readFile("${WORKSPACE}/tmp/assume-role-output.json")
+          credsObj = new groovy.json.JsonSlurperClassic().parseText(credsJson)
+        }
+      }
+    }
+    stage('Deploy') {
+      steps {
+        dir("${workspace}/terraform/deploys/${environment}") {
+          echo "Initialising Terraform"
+          sh("terraform init -input=false -no-color \
+            -var access_key=${credsObj.Credentials.AccessKeyId} \
+            -var secret_key=${credsObj.Credentials.SecretAccessKey} \
+            -var token=${credsObj.Credentials.SessionToken}")
+            echo "Deploying Terraform"
+          sh("terraform apply -auto-approve -no-color \
+            -var access_key=${credsObj.Credentials.AccessKeyId} \
+            -var secret_key=${credsObj.Credentials.SecretAccessKey} \
+            -var token=${credsObj.Credentials.SessionToken}")
+        }
+      }
+    }
+  }
+  post {
+    cleanup {
+      script {
+        echo 'End of Jenkinsfile'
+        sh("rm -rf tmp")
+      }
+    }
+  }
+}
