@@ -91,3 +91,23 @@ resource "aws_route_table_association" "db" {
   subnet_id      = aws_subnet.db[each.key].id
   route_table_id = aws_route_table.db.id
 }
+
+resource "aws_security_group" "packer" {
+  name          = "packer"
+  vpc_id        = aws_vpc.main.id
+  ingress {
+    from_port       = 0
+    to_port         = 0
+    protocol        = "-1"
+    cidr_blocks     = ["0.0.0.0/0"]
+  }
+  egress {
+    from_port       = 0
+    to_port         = 0
+    protocol        = "-1"
+    cidr_blocks     = ["0.0.0.0/0"]
+  }
+  tags = {
+    Name = "packer"
+  }
+}
