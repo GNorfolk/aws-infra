@@ -15,12 +15,12 @@ pipeline {
           sh "mkdir tmp"
           echo "Declaring Variables"
           switch (environment) {
-            case 'Flexible':
+            case 'Static':
               role = "arn:aws:iam::103348857345:role/Admin"
               session = "NorfolkGaming-${environment}-Deployment"
               region = "eu-west-1"
               break
-            case 'Fixed':
+            case 'eVolution':
               role = "arn:aws:iam::103348857345:role/Admin"
               session = "NorfolkGaming-${environment}-Deployment"
               region = "eu-west-1"
