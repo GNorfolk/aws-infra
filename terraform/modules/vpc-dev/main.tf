@@ -58,7 +58,7 @@ resource "random_shuffle" "az" {
 resource "aws_nat_gateway" "nat" {
   count = var.dev ? 0 : 1
   allocation_id = aws_eip.nat[0].id
-  subnet_id = aws_subnet.elb[random_shuffle.az].id
+  subnet_id = aws_subnet.elb[random_shuffle.az.result].id
 }
 
 resource "aws_route_table" "elb" {
