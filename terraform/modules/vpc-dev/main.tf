@@ -20,8 +20,7 @@ resource "aws_subnet" "app" {
   for_each = var.mapping
   vpc_id = aws_vpc.main.id
   cidr_block = cidrsubnet(var.cidr, 4, each.value + 3)
-  # map_public_ip_on_launch = false
-  map_public_ip_on_launch = true
+  map_public_ip_on_launch = var.dev ? true : false
   availability_zone = join("", ["eu-west-1", each.key])
   tags = {
     Name = join("", ["app_az_", each.key])
@@ -81,8 +80,7 @@ resource "aws_route_table" "app" {
   vpc_id = aws_vpc.main.id
   route {
     cidr_block = "0.0.0.0/0"
-    # gateway_id = aws_nat_gateway.nat.id
-    gateway_id = aws_internet_gateway.main.id
+    gateway_id = var.dev ? aws_internet_gateway.main.id : aws_nat_gateway.nat.id
   }
 }
 
