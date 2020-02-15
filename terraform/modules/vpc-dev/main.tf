@@ -80,7 +80,7 @@ resource "aws_route_table" "app" {
   vpc_id = aws_vpc.main.id
   route {
     cidr_block = "0.0.0.0/0"
-    gateway_id = var.dev ? aws_internet_gateway.main.id : aws_nat_gateway.nat.id
+    gateway_id = var.dev ? aws_internet_gateway.main.id : aws_nat_gateway.nat[0].id
   }
 }
 
