@@ -20,7 +20,7 @@ resource "aws_subnet" "app" {
   for_each = var.mapping
   vpc_id = aws_vpc.main.id
   cidr_block = cidrsubnet(var.cidr, 4, each.value + 3)
-  map_public_ip_on_launch = false
+  map_public_ip_on_launch = var.dev ? true : false
   availability_zone = join("", ["eu-west-1", each.key])
   tags = {
     Name = join("", ["app_az_", each.key])
@@ -38,17 +38,27 @@ resource "aws_subnet" "db" {
   }
 }
 
-resource "aws_eip" "nat" {
-  vpc = true
-}
-
 resource "aws_internet_gateway" "main" {
   vpc_id = aws_vpc.main.id
 }
 
+resource "aws_eip" "nat" {
+  count = var.dev ? 0 : 1
+  vpc = true
+}
+
+resource "random_shuffle" "az" {
+  result_count = 1
+  input = [
+    for az, _ in var.mapping:
+      az
+  ]
+}
+
 resource "aws_nat_gateway" "nat" {
-  allocation_id = aws_eip.nat.id
-  subnet_id = aws_subnet.elb["a"].id
+  count = var.dev ? 0 : 1
+  allocation_id = aws_eip.nat[0].id
+  subnet_id = aws_subnet.elb[random_shuffle.az.result[0]].id
 }
 
 resource "aws_route_table" "elb" {
@@ -70,7 +80,7 @@ resource "aws_route_table" "app" {
   vpc_id = aws_vpc.main.id
   route {
     cidr_block = "0.0.0.0/0"
-    gateway_id = aws_nat_gateway.nat.id
+    gateway_id = var.dev ? aws_internet_gateway.main.id : aws_nat_gateway.nat[0].id
   }
 }
 
