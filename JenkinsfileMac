@@ -4,6 +4,7 @@ pipeline {
   parameters {
     choice(name: 'environment', choices: ['Static', 'eVolution'], description: "This is the environment to deploy to.")
     booleanParam(name: 'dev', defaultValue: false, description: 'Create dev vpc?')
+    choice(name: 'deployment', choices: ['apply', 'destroy'], description: "Whether to deploy or destroy terraform resources.")
   }
   environment {
     PATH = "/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin:/opt/aws/bin"
@@ -48,7 +49,7 @@ pipeline {
             -var secret_key=${credsObj.Credentials.SecretAccessKey} \
             -var token=${credsObj.Credentials.SessionToken}")
             echo "Deploying Terraform"
-          sh("terraform apply -auto-approve -no-color \
+          sh("terraform ${deployment} -auto-approve -no-color \
             -var access_key=${credsObj.Credentials.AccessKeyId} \
             -var secret_key=${credsObj.Credentials.SecretAccessKey} \
             -var token=${credsObj.Credentials.SessionToken} \
