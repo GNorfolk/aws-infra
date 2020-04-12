@@ -9,10 +9,10 @@ resource "aws_route53_record" "ns" {
   ttl     = "172800"
   allow_overwrite = true
   records = [
-    "ns-493.awsdns-61.com.",
-    "ns-1964.awsdns-53.co.uk.",
-    "ns-1070.awsdns-05.org.",
-    "ns-954.awsdns-55.net."
+    "ns-332.awsdns-41.com",
+    "ns-893.awsdns-47.net",
+    "ns-1889.awsdns-44.co.uk",
+    "ns-1217.awsdns-24.org"
   ]
 }
 
