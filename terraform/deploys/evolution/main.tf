@@ -1,6 +1,6 @@
 module "vpc" {
   source = "../../modules/vpc"
   cidr = "10.0.0.0/16"
-  mapping = var.dev ? { a = 0 } : { a = 0, b = 1, c = 2 }
+  mapping = var.dev ? { a = 0, b = 1 } : { a = 0, b = 1, c = 2 }
   dev = var.dev
 }
