@@ -43,17 +43,23 @@ pipeline {
     stage('Deploy') {
       steps {
         dir("${workspace}/terraform/deploys/${environment}") {
-          echo "Initialising Terraform"
-          sh("terraform init -input=false -no-color \
-            -var access_key=${credsObj.Credentials.AccessKeyId} \
-            -var secret_key=${credsObj.Credentials.SecretAccessKey} \
-            -var token=${credsObj.Credentials.SessionToken}")
-            echo "Deploying Terraform"
-          sh("terraform ${deployment} -auto-approve -no-color \
-            -var access_key=${credsObj.Credentials.AccessKeyId} \
-            -var secret_key=${credsObj.Credentials.SecretAccessKey} \
-            -var token=${credsObj.Credentials.SessionToken} \
-            -var dev=${dev}")
+          script {
+            if(deployment == "apply" || environment == "eVolution") {
+              echo "Initialising Terraform"
+              sh("terraform init -input=false -no-color \
+                -var access_key=${credsObj.Credentials.AccessKeyId} \
+                -var secret_key=${credsObj.Credentials.SecretAccessKey} \
+                -var token=${credsObj.Credentials.SessionToken}")
+                echo "Deploying Terraform"
+              sh("terraform ${deployment} -auto-approve -no-color \
+                -var access_key=${credsObj.Credentials.AccessKeyId} \
+                -var secret_key=${credsObj.Credentials.SecretAccessKey} \
+                -var token=${credsObj.Credentials.SessionToken} \
+                -var dev=${dev}")
+            } else {
+              echo "Cannot destroy Static deploys."
+            }
+          }
         }
       }
     }
