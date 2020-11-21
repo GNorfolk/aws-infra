@@ -1,41 +1,14 @@
-# resource "aws_vpc" "main" {
-#   cidr_block = var.cidr
-#   tags = {
-#     Name = "main"
-#   }
-# }
-
-# resource "aws_subnet" "elb" {
-#   for_each = { for idx, az_name in toset(data.aws_availability_zones.zones.names): idx => az_name }
-#   vpc_id = aws_vpc.main.id
-#   cidr_block = cidrsubnet(var.cidr, 4, each.value)
-#   map_public_ip_on_launch = true
-#   availability_zone = each.value
-#   tags = {
-#     Name = "elb-${each.value}"
-#   }
-# }
-
-data "aws_availability_zones" "azs" {
-  state = "available"
-}
-
-locals {
-  az_names = data.aws_availability_zones.azs.names
-}
-
-variable "vpc_cidr" {
-  default = "10.0.0.0/16"
-}
-
 resource "aws_vpc" "main" {
   cidr_block = var.vpc_cidr
+  tags = {
+    Name = "main"
+  }
 }
 
 resource "aws_subnet" "public" {
   for_each                = {for idx, az_name in local.az_names: idx => az_name}
   vpc_id                  = aws_vpc.main.id
-  cidr_block              = cidrsubnet(var.vpc_cidr, 8, each.key)
+  cidr_block              = cidrsubnet(var.vpc_cidr, 4, each.key)
   availability_zone       = local.az_names[each.key]
   map_public_ip_on_launch = true
 }
