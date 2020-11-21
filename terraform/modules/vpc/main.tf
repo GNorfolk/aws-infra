@@ -5,12 +5,26 @@ resource "aws_vpc" "main" {
   }
 }
 
-resource "aws_subnet" "public" {
+resource "aws_subnet" "elb" {
   for_each                = { for idx, az_name in local.az_names: az_name => idx }
   vpc_id                  = aws_vpc.main.id
   cidr_block              = cidrsubnet(var.vpc_cidr, 4, each.value)
   availability_zone       = local.az_names[each.value]
   map_public_ip_on_launch = true
+  Tags = {
+    Name = "elb-${each.value}"
+  }
+}
+
+resource "aws_subnet" "app" {
+  for_each                = { for idx, az_name in local.az_names: az_name => idx }
+  vpc_id                  = aws_vpc.main.id
+  cidr_block              = cidrsubnet(var.vpc_cidr, 4, each.value + 4)
+  availability_zone       = local.az_names[each.value]
+  map_public_ip_on_launch = false
+  Tags = {
+    Name = "app-${each.value}"
+  }
 }
 
 # resource "aws_subnet" "app" {
