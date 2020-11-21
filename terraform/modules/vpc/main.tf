@@ -1,6 +1,6 @@
 resource "aws_vpc" "main" {
-  cidr_block = var.vpc_cidr
-  tags = {
+  cidr_block  = var.vpc_cidr
+  tags        = {
     Name = "main"
   }
 }
@@ -11,7 +11,7 @@ resource "aws_subnet" "elb" {
   cidr_block              = cidrsubnet(var.vpc_cidr, 4, each.value)
   availability_zone       = local.az_names[each.value]
   map_public_ip_on_launch = true
-  tags = {
+  tags                    = {
     Name = "elb-${each.value}"
   }
 }
@@ -22,7 +22,7 @@ resource "aws_subnet" "app" {
   cidr_block              = cidrsubnet(var.vpc_cidr, 4, each.value + 4)
   availability_zone       = local.az_names[each.value]
   map_public_ip_on_launch = false
-  tags = {
+  tags                    = {
     Name = "app-${each.value}"
   }
 }
@@ -33,7 +33,7 @@ resource "aws_subnet" "db" {
   cidr_block              = cidrsubnet(var.vpc_cidr, 4, each.value + 8)
   availability_zone       = local.az_names[each.value]
   map_public_ip_on_launch = false
-  tags = {
+  tags                    = {
     Name = "db-${each.value}"
   }
 }
@@ -51,6 +51,9 @@ resource "aws_nat_gateway" "nat" {
 resource "aws_eip" "nat" {
   for_each  = toset(aws_subnet.app.id)
   vpc       = true
+  tags      = {
+    Name = each.key
+  }
 }
 
 # resource "random_shuffle" "az" {
