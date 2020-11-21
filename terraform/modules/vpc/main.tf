@@ -42,11 +42,11 @@ resource "aws_internet_gateway" "main" {
   vpc_id  = aws_vpc.main.id
 }
 
-resource "aws_nat_gateway" "nat" {
-  for_each      = toset(aws_subnet.app.id)
-  allocation_id = aws_eip.nat[each.key].id
-  subnet_id     = each.key
-}
+# resource "aws_nat_gateway" "nat" {
+#   for_each      = toset(aws_subnet.app.id)
+#   allocation_id = aws_eip.nat[each.key].id
+#   subnet_id     = each.key
+# }
 
 resource "aws_eip" "nat" {
   for_each  = toset(aws_subnet.app.id)
