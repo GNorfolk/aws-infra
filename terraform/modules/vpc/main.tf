@@ -52,7 +52,7 @@ resource "aws_eip" "nat" {
   for_each  = toset(aws_subnet.app.id)
   vpc       = true
   tags      = {
-    Name = each.key
+    Name = aws_subnet.app[each.key].id
   }
 }
 
