@@ -6,4 +6,5 @@ module "vpc" {
 }
 
 output "output" {
-  value = module.vpc.output.value
+  value = module.vpc.output
+}
