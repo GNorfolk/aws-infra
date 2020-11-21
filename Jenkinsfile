@@ -54,7 +54,7 @@ pipeline {
             // sh("terraform output")
             if (params.tfApply) {
               echo "Deploying Terraform"
-              sh("terraform apply plan.out -auto-approve -no-color")
+              sh("terraform apply \"plan.out\"")
             }
           }
         }
