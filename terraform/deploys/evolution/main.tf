@@ -4,3 +4,6 @@ module "vpc" {
   mapping = var.dev ? { a = 0, b = 1 } : { a = 0, b = 1, c = 2 }
   dev = var.dev
 }
+
+output "output" {
+  value = module.vpc.output

@@ -51,6 +51,7 @@ pipeline {
               -var 'secret_key=${credsObj.Credentials.SecretAccessKey}' \
               -var 'token=${credsObj.Credentials.SessionToken}' \
               -var dev=${dev}")
+            sh("terraform output")
             if (params.tfApply) {
               echo "Deploying Terraform"
               sh("terraform apply plan.out -auto-approve -no-color")
