@@ -49,7 +49,7 @@ resource "aws_internet_gateway" "main" {
 # }
 
 output "output" {
-  value = aws_subnet.app.id
+  value = aws_subnet.app[*].id
 }
 
 
