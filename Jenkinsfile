@@ -3,7 +3,6 @@ pipeline {
   agent any
   parameters {
     choice(name: 'environment', choices: ['static', 'evolution'], description: "This is the environment to deploy to.")
-    choice(name: 'deployment', choices: ['apply', 'destroy'], description: "Whether to deploy or destroy terraform resources.")
     booleanParam(name: 'dev', defaultValue: false, description: 'Create dev vpc?')
     booleanParam(name: 'tfApply', defaultValue: false, description: 'Apply terraform?')
   }
@@ -45,13 +44,11 @@ pipeline {
       steps {
         dir("${workspace}/terraform/deploys/${environment}") {
           script {
-            if(deployment == "destroy" && environment == "static") { error("Cannot destroy static") }
             echo "Initialising Terraform"
             sh("terraform init -input=false -no-color \
               -var access_key=${credsObj.Credentials.AccessKeyId} \
               -var secret_key=${credsObj.Credentials.SecretAccessKey} \
               -var token=${credsObj.Credentials.SessionToken}")
-            echo "Terraform Plan"
             sh("terraform plan plan.out -no-color \
               -var access_key=${credsObj.Credentials.AccessKeyId} \
               -var secret_key=${credsObj.Credentials.SecretAccessKey} \
