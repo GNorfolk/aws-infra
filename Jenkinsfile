@@ -46,13 +46,13 @@ pipeline {
           script {
             echo "Initialising Terraform"
             sh("terraform init -input=false -no-color \
-              -var access_key=${credsObj.Credentials.AccessKeyId} \
-              -var secret_key=${credsObj.Credentials.SecretAccessKey} \
-              -var token=${credsObj.Credentials.SessionToken}")
+              -var 'access_key=${credsObj.Credentials.AccessKeyId}' \
+              -var 'secret_key=${credsObj.Credentials.SecretAccessKey}' \
+              -var 'token=${credsObj.Credentials.SessionToken}'")
             sh("terraform plan plan.out -no-color \
-              -var access_key=${credsObj.Credentials.AccessKeyId} \
-              -var secret_key=${credsObj.Credentials.SecretAccessKey} \
-              -var token=${credsObj.Credentials.SessionToken} \
+              -var 'access_key=${credsObj.Credentials.AccessKeyId}' \
+              -var 'secret_key=${credsObj.Credentials.SecretAccessKey}' \
+              -var 'token=${credsObj.Credentials.SessionToken}' \
               -var dev=${dev}")
             if (params.tfApply) {
               echo "Deploying Terraform"
