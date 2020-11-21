@@ -6,7 +6,7 @@ resource "aws_vpc" "main" {
 }
 
 resource "aws_subnet" "public" {
-  for_each                = {for idx, az_name in local.az_names: idx => az_name}
+  for_each                = { for idx, az_name in local.az_names: az_name => idx }
   vpc_id                  = aws_vpc.main.id
   cidr_block              = cidrsubnet(var.vpc_cidr, 4, each.key)
   availability_zone       = local.az_names[each.key]
