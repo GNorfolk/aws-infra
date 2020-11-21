@@ -49,7 +49,7 @@ resource "aws_internet_gateway" "main" {
 # }
 
 output "output" {
-  value = aws_subnet.app[*]
+  value = tomap(aws_subnet.app[*])
 }
 
 
