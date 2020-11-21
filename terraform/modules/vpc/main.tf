@@ -27,31 +27,20 @@ resource "aws_subnet" "app" {
   }
 }
 
-# resource "aws_subnet" "app" {
-#   for_each = var.mapping
-#   vpc_id = aws_vpc.main.id
-#   cidr_block = cidrsubnet(var.cidr, 4, each.value + 3)
-#   map_public_ip_on_launch = var.dev ? true : false
-#   availability_zone = join("", ["eu-west-1", each.key])
-#   tags = {
-#     Name = join("", ["app_az_", each.key])
-#   }
-# }
+resource "aws_subnet" "db" {
+  for_each                = { for idx, az_name in local.az_names: az_name => idx }
+  vpc_id                  = aws_vpc.main.id
+  cidr_block              = cidrsubnet(var.vpc_cidr, 4, each.value + 8)
+  availability_zone       = local.az_names[each.value]
+  map_public_ip_on_launch = false
+  tags = {
+    Name = "db-${each.value}"
+  }
+}
 
-# resource "aws_subnet" "db" {
-#   for_each = var.mapping
-#   vpc_id = aws_vpc.main.id
-#   cidr_block = cidrsubnet(var.cidr, 4, each.value + 6)
-#   map_public_ip_on_launch = false
-#   availability_zone = join("", ["eu-west-1", each.key])
-#   tags = {
-#     Name = join("", ["db_az_", each.key])
-#   }
-# }
-
-# resource "aws_internet_gateway" "main" {
-#   vpc_id = aws_vpc.main.id
-# }
+resource "aws_internet_gateway" "main" {
+  vpc_id = aws_vpc.main.id
+}
 
 # resource "aws_eip" "nat" {
 #   count = var.dev ? 0 : 1
