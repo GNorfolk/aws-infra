@@ -8,7 +8,7 @@ resource "aws_vpc" "main" {
 resource "aws_subnet" "elb" {
   for_each = toset(data.aws_availability_zones.zones.names)
   vpc_id = aws_vpc.main.id
-  cidr_block = cidrsubnet(var.cidr, 4, each.value)
+  cidr_block = cidrsubnet(var.cidr, 4, each.key)
   map_public_ip_on_launch = true
   availability_zone = each.key
   tags = {
