@@ -11,7 +11,7 @@ resource "aws_subnet" "elb" {
   cidr_block              = cidrsubnet(var.vpc_cidr, 4, each.value)
   availability_zone       = local.az_names[each.value]
   map_public_ip_on_launch = true
-  Tags = {
+  tags = {
     Name = "elb-${each.value}"
   }
 }
@@ -22,7 +22,7 @@ resource "aws_subnet" "app" {
   cidr_block              = cidrsubnet(var.vpc_cidr, 4, each.value + 4)
   availability_zone       = local.az_names[each.value]
   map_public_ip_on_launch = false
-  Tags = {
+  tags = {
     Name = "app-${each.value}"
   }
 }
