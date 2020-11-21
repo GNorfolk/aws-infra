@@ -2,32 +2,34 @@ import groovy.json.JsonSlurperClassic
 pipeline {
   agent any
   parameters {
-    choice(name: 'environment', choices: ['Flexible', 'Fixed'], description: "This is the environment to deploy to.")
+    choice(name: 'environment', choices: ['Static', 'eVolution'], description: "This is the environment to deploy to.")
+    choice(name: 'deployment', choices: ['apply', 'destroy'], description: "Whether to deploy or destroy terraform resources.")
+    booleanParam(name: 'dev', defaultValue: false, description: 'Create dev vpc?')
   }
   environment {
-    Path = "C:\\Program Files\\Python38\\Scripts\\;C:\\Program Files\\Python38\\;D:\\Program Files\\Java\\bin;C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\javapath;C:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common;C:\\Program Files (x86)\\AMD APP\\bin\\x86_64;C:\\Program Files (x86)\\AMD APP\\bin\\x86;C:\\Windows\\system32;C:\\Windows;C:\\Windows\\System32\\Wbem;C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\;C:\\Program Files (x86)\\ATI Technologies\\ATI.ACE\\Core-Static;D:\\Program Files\\Git\\cmd;D:\\Program Files\\Git\\mingw64\\bin;D:\\Program Files\\Git\\usr\\bin;D:\\Program Files\\nodejs\\;C:\\Users\\TheNorfolk\\AppData\\Roaming\\npm;C:\\Users\\TheNorfolk\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\TheNorfolk\\AppData\\Local\\atom\\bin;C:\\Users\\TheNorfolk\\terraform_0.12.16_windows_amd64"
+    PATH = "/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin:/opt/aws/bin"
   }
   stages {
     stage('Setup') {
       steps {
         script {
           echo "Prerequisite Setup"
-          bat "mkdir tmp"
+          sh "mkdir tmp"
           echo "Declaring Variables"
           switch (environment) {
-            case 'Flexible':
+            case 'Static':
               role = "arn:aws:iam::103348857345:role/Admin"
               session = "NorfolkGaming-${environment}-Deployment"
               region = "eu-west-1"
               break
-            case 'Fixed':
+            case 'eVolution':
               role = "arn:aws:iam::103348857345:role/Admin"
               session = "NorfolkGaming-${environment}-Deployment"
               region = "eu-west-1"
               break
           }
           echo "Assuming Role"
-          bat("aws sts assume-role \
+          sh("aws sts assume-role \
             --role-arn ${role} \
             --role-session-name ${session} \
             --region ${region} \
@@ -40,17 +42,24 @@ pipeline {
     }
     stage('Deploy') {
       steps {
-        dir("${workspace}\\terraform\\deploys\\${environment}") {
-          echo "Initialising Terraform"
-          bat("terraform init -input=false -no-color \
-            -var access_key=${credsObj.Credentials.AccessKeyId} \
-            -var secret_key=${credsObj.Credentials.SecretAccessKey} \
-            -var token=${credsObj.Credentials.SessionToken}")
-            echo "Deploying Terraform"
-          bat("terraform apply -auto-approve -no-color \
-            -var access_key=${credsObj.Credentials.AccessKeyId} \
-            -var secret_key=${credsObj.Credentials.SecretAccessKey} \
-            -var token=${credsObj.Credentials.SessionToken}")
+        dir("${workspace}/terraform/deploys/${environment}") {
+          script {
+            if(deployment == "apply" || environment == "eVolution") {
+              echo "Initialising Terraform"
+              sh("terraform init -input=false -no-color \
+                -var access_key=${credsObj.Credentials.AccessKeyId} \
+                -var secret_key=${credsObj.Credentials.SecretAccessKey} \
+                -var token=${credsObj.Credentials.SessionToken}")
+                echo "Deploying Terraform"
+              sh("terraform ${deployment} -auto-approve -no-color \
+                -var access_key=${credsObj.Credentials.AccessKeyId} \
+                -var secret_key=${credsObj.Credentials.SecretAccessKey} \
+                -var token=${credsObj.Credentials.SessionToken} \
+                -var dev=${dev}")
+            } else {
+              echo "Cannot destroy Static deploys."
+            }
+          }
         }
       }
     }
@@ -59,7 +68,7 @@ pipeline {
     cleanup {
       script {
         echo 'End of Jenkinsfile'
-        bat("""rmdir "${workspace}\\tmp" /S /Q""")
+        sh("rm -rf tmp")
       }
     }
   }
