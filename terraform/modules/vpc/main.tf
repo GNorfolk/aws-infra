@@ -84,38 +84,38 @@ resource "aws_route_table" "app" {
   }
 }
 
-# resource "aws_route_table_association" "app" {
-#   for_each        = { for idx, s in aws_subnet.app : idx => s.id }
-#   subnet_id       = each.value
-#   route_table_id  = aws_route_table.app[each.key].id
-# }
+resource "aws_route_table_association" "app" {
+  for_each        = { for idx, s in aws_subnet.app : idx => s.id }
+  subnet_id       = each.value
+  route_table_id  = aws_route_table.app[each.key].id
+}
 
-# resource "aws_route_table" "db" {
-#   vpc_id = aws_vpc.main.id
-# }
+resource "aws_route_table" "db" {
+  vpc_id = aws_vpc.main.id
+}
 
-# resource "aws_route_table_association" "db" {
-#   for_each = var.mapping
-#   subnet_id      = aws_subnet.db[each.key].id
-#   route_table_id = aws_route_table.db.id
-# }
+resource "aws_route_table_association" "db" {
+  for_each        = { for idx, s in aws_subnet.db : idx => s.id }
+  subnet_id       = each.value
+  route_table_id  = aws_route_table.db.id
+}
 
-# resource "aws_security_group" "packer" {
-#   name          = "packer"
-#   vpc_id        = aws_vpc.main.id
-#   ingress {
-#     from_port       = 0
-#     to_port         = 0
-#     protocol        = "-1"
-#     cidr_blocks     = ["0.0.0.0/0"]
-#   }
-#   egress {
-#     from_port       = 0
-#     to_port         = 0
-#     protocol        = "-1"
-#     cidr_blocks     = ["0.0.0.0/0"]
-#   }
-#   tags = {
-#     Name = "packer"
-#   }
-# }
+resource "aws_security_group" "packer" {
+  name    = "packer"
+  vpc_id  = aws_vpc.main.id
+  ingress {
+    from_port       = 0
+    to_port         = 0
+    protocol        = "-1"
+    cidr_blocks     = ["0.0.0.0/0"]
+  }
+  egress {
+    from_port       = 0
+    to_port         = 0
+    protocol        = "-1"
+    cidr_blocks     = ["0.0.0.0/0"]
+  }
+  tags = {
+    Name = "packer"
+  }
+}
