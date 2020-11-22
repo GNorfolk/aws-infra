@@ -48,13 +48,19 @@ resource "aws_internet_gateway" "main" {
 #   subnet_id     = each.key.id
 # }
 
-resource "aws_eip" "nat" {
-  for_each  = { for idx, s in aws_subnet.app[*] : idx => s.id }
-  vpc       = true
-  tags      = {
-    Name = each.key
-  }
+
+output "output" {
+  for_each = { for idx, s in aws_subnet.app[*] : idx => s }
+  value = each.value
 }
+
+# resource "aws_eip" "nat" {
+#   for_each  = { for idx, s in aws_subnet.app[*] : idx => s.id }
+#   vpc       = true
+#   tags      = {
+#     Name = each.key
+#   }
+# }
 
 # resource "random_shuffle" "az" {
 #   result_count = 1
