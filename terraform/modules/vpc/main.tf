@@ -42,18 +42,14 @@ resource "aws_internet_gateway" "main" {
   vpc_id  = aws_vpc.main.id
 }
 
-resource "aws_nat_gateway" "nat" {
-  for_each      = { for s in aws_subnet.app : s.id }
-  allocation_id = aws_eip.nat[each.key].id
-  subnet_id     = each.key.id
-}
-
-output "output" {
-  value = length(aws_subnet.app[*])
-}
+# resource "aws_nat_gateway" "nat" {
+#   for_each      = { for s in aws_subnet.app : s.id }
+#   allocation_id = aws_eip.nat[each.key].id
+#   subnet_id     = each.key.id
+# }
 
 resource "aws_eip" "nat" {
-  for_each  = { for s in aws_subnet.app : s.id }
+  for_each  = { for s in aws_subnet.app[*] : s.id }
   vpc       = true
   tags      = {
     Name = each.key
