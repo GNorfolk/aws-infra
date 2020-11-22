@@ -12,7 +12,7 @@ resource "aws_subnet" "elb" {
   availability_zone       = local.az_names[each.value]
   map_public_ip_on_launch = true
   tags                    = {
-    Name = "elb-${each.value}"
+    Name = "elb-${each.key}"
   }
 }
 
@@ -23,7 +23,7 @@ resource "aws_subnet" "app" {
   availability_zone       = local.az_names[each.value]
   map_public_ip_on_launch = false
   tags                    = {
-    Name = "app-${each.value}"
+    Name = "app-${each.key}"
   }
 }
 
@@ -34,7 +34,7 @@ resource "aws_subnet" "db" {
   availability_zone       = local.az_names[each.value]
   map_public_ip_on_launch = false
   tags                    = {
-    Name = "db-${each.value}"
+    Name = "db-${each.key}"
   }
 }
 
