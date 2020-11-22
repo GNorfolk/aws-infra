@@ -43,9 +43,9 @@ resource "aws_internet_gateway" "main" {
 }
 
 resource "aws_nat_gateway" "nat" {
-  for_each      = { for subnet.id in aws_subnet.app }
-  allocation_id = aws_eip.nat[each.key].id
-  subnet_id     = each.key
+  for_each      = { for idx, subnet in aws_subnet[*].app: subnet => idx }
+  allocation_id = aws_eip.nat[each.key.id].id
+  subnet_id     = each.key.id
 }
 
 output "output" {
