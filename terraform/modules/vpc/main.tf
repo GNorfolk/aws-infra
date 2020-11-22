@@ -75,20 +75,20 @@ resource "aws_route_table_association" "elb" {
   route_table_id  = aws_route_table.elb.id
 }
 
-# resource "aws_route_table" "app" {
-#   for_each = var.mapping
-#   vpc_id = aws_vpc.main.id
-#   route {
-#     cidr_block = "0.0.0.0/0"
-#     gateway_id = var.dev ? aws_internet_gateway.main.id : aws_nat_gateway.nat[0].id
-#   }
-# }
+resource "aws_route_table" "app" {
+  for_each  = { for idx, s in aws_subnet.app : idx => s.id }
+  vpc_id    = aws_vpc.main.id
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_nat_gateway.nat.id
+  }
+}
 
-# resource "aws_route_table_association" "app" {
-#   for_each = var.mapping
-#   subnet_id      = aws_subnet.app[each.key].id
-#   route_table_id = aws_route_table.app[each.key].id
-# }
+resource "aws_route_table_association" "app" {
+  for_each        = { for idx, s in aws_subnet.app : idx => s.id }
+  subnet_id       = each.value
+  route_table_id  = aws_route_table.app[each.key].id
+}
 
 # resource "aws_route_table" "db" {
 #   vpc_id = aws_vpc.main.id
