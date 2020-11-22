@@ -49,7 +49,7 @@ resource "aws_internet_gateway" "main" {
 # }
 
 resource "aws_eip" "nat" {
-  for_each  = { for s in aws_subnet.app[*] : s.id }
+  for_each  = { for idx, s in aws_subnet.app[*] : idx => s.id }
   vpc       = true
   tags      = {
     Name = each.key
