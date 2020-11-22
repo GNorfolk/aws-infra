@@ -5,6 +5,6 @@ module "vpc" {
   dev = var.dev
 }
 
-output "output" {
-  value = module.vpc.output
-}
+# output "output" {
+#   value = module.vpc.output
+# }
