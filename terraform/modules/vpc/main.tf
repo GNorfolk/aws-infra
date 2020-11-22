@@ -80,15 +80,15 @@ resource "aws_route_table" "app" {
   vpc_id    = aws_vpc.main.id
   route {
     cidr_block = "0.0.0.0/0"
-    gateway_id = aws_nat_gateway.nat.id
+    gateway_id = aws_nat_gateway.nat[idx].id
   }
 }
 
-resource "aws_route_table_association" "app" {
-  for_each        = { for idx, s in aws_subnet.app : idx => s.id }
-  subnet_id       = each.value
-  route_table_id  = aws_route_table.app[each.key].id
-}
+# resource "aws_route_table_association" "app" {
+#   for_each        = { for idx, s in aws_subnet.app : idx => s.id }
+#   subnet_id       = each.value
+#   route_table_id  = aws_route_table.app[each.key].id
+# }
 
 # resource "aws_route_table" "db" {
 #   vpc_id = aws_vpc.main.id
