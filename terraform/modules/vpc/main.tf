@@ -48,7 +48,6 @@ resource "aws_nat_gateway" "nat" {
   subnet_id     = each.value
 }
 
-
 # output "output" {
 #   for_each = { for idx, s in aws_subnet.app[*] : idx => s }
 #   value = each.value
@@ -62,33 +61,19 @@ resource "aws_eip" "nat" {
   }
 }
 
-# resource "random_shuffle" "az" {
-#   result_count = 1
-#   input = [
-#     for az, _ in var.mapping:
-#       az
-#   ]
-# }
+resource "aws_route_table" "elb" {
+  vpc_id = aws_vpc.main.id
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.main.id
+  }
+}
 
-# resource "aws_nat_gateway" "nat" {
-#   count = var.dev ? 0 : 1
-#   allocation_id = aws_eip.nat[0].id
-#   subnet_id = aws_subnet.elb[random_shuffle.az.result[0]].id
-# }
-
-# resource "aws_route_table" "elb" {
-#   vpc_id = aws_vpc.main.id
-#   route {
-#     cidr_block = "0.0.0.0/0"
-#     gateway_id = aws_internet_gateway.main.id
-#   }
-# }
-
-# resource "aws_route_table_association" "elb" {
-#   for_each = var.mapping
-#   subnet_id      = aws_subnet.elb[each.key].id
-#   route_table_id = aws_route_table.elb.id
-# }
+resource "aws_route_table_association" "elb" {
+  for_each        = { for idx, s in aws_subnet.elb : idx => s.id }
+  subnet_id       = each.value
+  route_table_id  = aws_route_table.elb.id
+}
 
 # resource "aws_route_table" "app" {
 #   for_each = var.mapping
