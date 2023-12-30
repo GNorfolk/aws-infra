@@ -4,7 +4,7 @@ resource "aws_instance" "ec2" {
   subnet_id = "subnet-0092be8418284d80a"
   vpc_security_group_ids = [aws_security_group.ec2.id]
   iam_instance_profile = aws_iam_instance_profile.ec2.id
-  user_data_base64 = "IyEvYmluL2Jhc2gKc3VkbyBhcHQgdXBkYXRlCnN1ZG8gYXB0IGluc3RhbGwgbXlzcWwtY2xpZW50LWNvcmUtOC4w"
+  user_data_base64 = "IyEvYmluL2Jhc2gKc3VkbyBhcHQgdXBkYXRlCnN1ZG8gYXB0IGluc3RhbGwgLXkgbXlzcWwtY2xpZW50LWNvcmUtOC4wIGF3c2NsaQ=="
   # source_dest_check = false
   root_block_device { volume_size = 8 }
   tags = { Name = "react-app-ec2" }
